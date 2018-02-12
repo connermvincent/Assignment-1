@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Down the Hatch</title>
+</head>
+<link rel="stylesheet" href="adventureCSS.css">
+<body>
+    <div id="main">
+        <h1>Down the Hatch</h1>
+        <div id="gameBox">
+            <span id="textOutput">You are an adventurer: a rugged, tough warrior who explores 
+            the dangers of a mysterious world to sate your curiousity and goldlust. One day, 
+            while exploring some ancient ruins, the ground gives way beneath you and you fall! 
+            You lose consciousness when you hit the ground- but you're not dead yet. Eventually 
+            you wake up...<br>
+            <br>
+            Press Enter to begin!</span><br>
+            <img id="adventureImage" src="img/AltarToLolth.jpg">
+            <input id="textInput" type="text" autofocus>
+        </div>
+        <button id="helpButton" class="UIButton">Show Help</button>
+        <button id="saveButton" class="UIButton">Save Game</button>
+        <button id="loadButton" class="UIButton">Load Game</button>
+    </div>
+     
+    <div id="help">
+        <h2>Help</h2>
+        Type what you want to do into the text box and press enter to play.<br>
+        <br>
+        <b>Commands:</b><br>
+        North, East, South, or West: Move in the indicated direction if there's an exit that way.<br>
+        Get or Take (Item): Pick up an item in the same room. For example: get sword.<br>
+        Drop (Item): Drop an item in the same room. For example: drop sword.<br>
+        Use (Item): Use an item to do something.<br>
+        Inventory: List the items in your inventory.<br>
+    </div>
+    
+    <div id="imagePreloading">
+        <img src="img/AltarToLolth.jpg">
+        <img src="img/CrossroadPath.jpg">
+        <img src="img/DarkCave.jpg">
+        <img src="img/Door.jpg">
+        <img src="img/Drow.jpg">
+        <img src="img/Escape.jpg">
+        <img src="img/Goblin.jpg">
+    </div>
+<script src="adventureScript.js"></script>
+</body>
+</html>

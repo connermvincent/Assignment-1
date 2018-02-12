@@ -1,0 +1,64 @@
+h1 {
+    text-align: center;
+    font-size: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin: 0px;
+}
+#main {
+    display: inline-block;
+    height: 700px;
+    width: 500px;
+    background-color: dimgray;
+    color: white;
+    border: solid;
+    border-color: black;
+    padding: 5px;
+    vertical-align: middle;
+}
+#adventureImage {
+    width: auto;
+    max-width: 100%;
+    height: 180px;
+    margin: auto;
+    display: none;
+}
+h2 {
+    text-align: center;
+}
+#gameBox {
+    background-color: lightgray;
+    height: 460px;
+    width: 360px;
+    border-radius: 20px;
+    padding: 20px;
+    margin: auto;
+}
+#textOutput {
+    color: black;
+}
+input {
+    position: absolute;
+    top: 520px;
+    left: 87px;
+    width: 355px;
+    border: 2px solid dimgray;
+}
+#help {
+    display: none;
+    height: 500px;
+    width: 300px;
+    border: solid;
+    padding: 4px;
+    vertical-align: middle;
+}
+.UIButton {
+    display: block;
+    text-align: center;
+    margin: auto;
+    margin-top: 20px;
+    width: 120px;
+}
+#imagePreloading {
+    display: none;
+}
