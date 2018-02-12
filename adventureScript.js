@@ -1,5 +1,4 @@
 // JavaScript Document
-/*jslint devel: true */
 /////////////////////////////////////////////////////////////////////
 // Property Initialization
 /////////////////////////////////////////////////////////////////////
@@ -32,6 +31,8 @@ var gameWon = false;
 
 // Game Files //
 var gameMap = [[], [], []];
+
+function initMap() {
 gameMap[0][0] = new Room("Rock Bottom", "You are in a dark cave, lit only barely by phosphorent fungi lining the walls. High above you can see a distant ring of white indicating the hole you must have fallen through to reach this abyssal cavern. The floor is a vast mat of soft green fungal flesh- it must have broken your fall. A tunnel hewn into the rock wall to the East leads deeper into the caves.", ["east"], ["sword"], "img/DarkCave.jpg");
 gameMap[1][0] = new Room("Goblin Tunnel", "Travelling deeper into the subterranean tunnels, you come to a crossroads. Standing guard here is a goblin: a pest from the surface world, resembling a man but tiny of stature, hunched, and filled with a shrieking hatred for order and justice. It waves a jagged knife menacingly and shouts at your approach, preventing you from advancing further. You'll have to fight it if you want to get anywhere down here.", ["west"], [], "img/Goblin.jpg");
 gameMap[2][0] = new Room("Drow Enclave", "A group of dark elves sit around a fire in this barricaded circular chamber, talking in their strange tongue. They're all heavily armed, bearing both sword and bow, and you feel it would be unwise to attack them. A pair of them move to man the barricade as you approach, barring you from entering. Perhaps a symbol of allegiance would help here.", ["west"], [], "img/Drow.jpg");
@@ -41,7 +42,9 @@ gameMap[2][1] = new Room("Altar", "There is a bizarre altar in this square room.
 gameMap[0][2] = new Room("The Brink", "After navigating a long and twisted series of tunnels, you come to an open pit. The yawning abyss is impenetrably dark, and the fungus coating the cave walls does very little to illuminate it. Fortunately the tunnel you were following continues to the East- it seems much safer, and better lit.", ["east", "south"], []);
 gameMap[1][2] = new Room("Button Room", "In the middle of this room is dominated by a large floor plate. When it's held down a door on the far Eastern wall slides open, but it closes as soon as you step away. If you had something heavy to weigh it down, you could keep the door open.", ["west"], []);
 gameMap[2][2] = new Room("Escape!", "A staircase leads up into the light- and freedom! You can't leave without your sword, though- it's a family heirloom, after all.", ["west"], [], "img/Escape.jpg");
+}
 
+initMap();
 var knownActions = ["get", "take", "use", "drop", "inventory"];
 var knownMovement = ["north", "east", "south", "west"];
 
@@ -57,7 +60,7 @@ var inputResponse = "";
 // Document Queries //
 var showHelp = document.querySelector("#helpButton"); // Hook for help button
 var saveButton = document.querySelector("#saveButton"); // Hook for save button
-var saveButton = document.querySelector("#loadButton"); // Hook for load button
+var loadButton = document.querySelector("#loadButton"); // Hook for load button
 var helpArea = document.querySelector("#help"); // Hook for help screen
 var textInput = document.querySelector("#textInput"); // Hook for text input box
 var textOutput = document.querySelector("#textOutput"); // Hook for text output span
@@ -134,9 +137,100 @@ function updateText() {
     
 }
 
+// Toggle the help area when the button is pressed.
+function toggleHelp() {
+    // Check if the display property actually exists, or if it's "none"
+    if (!helpArea.style.display || helpArea.style.display === "none") {
+        helpArea.style.display = "inline-block"; // Make the help area visible
+    } else {
+        helpArea.style.display = "none"; // Otherwise, hide the help area
+    }
+}
+
+/*
+Saves the current game state to local storage. The following details are stored:
+The current location of the player (by room).
+The status of Progress Tracker variables, and the alterations they make to rooms.
+
+The following details are not stored (yet):
+The player's inventory.
+The locations of items in the game world.
+Whether the game has been won or not. Walk out of the cave to see the victory
+message again.
+*/
+function saveGame() {
+    localStorage.setItem("playerLocX", player.locX);
+    localStorage.setItem("playerLocY", player.locY);
+    localStorage.setItem("goblinDefeated", goblinDefeated);
+    localStorage.setItem("drowPacified", drowPacified);
+    localStorage.setItem("doorUnlocked", doorUnlocked);
+    
+    inputResponse = "Game saved.";
+    updateText();
+    
+    console.log("Game saved. Begin save status.");
+    console.log("==============================");
+    console.log("Player Location: " + localStorage.getItem("playerLocX") + ", " + localStorage.getItem("playerLocY"));
+    console.log("Goblin Defeated: " + localStorage.getItem("goblinDefeated"));
+    console.log("Drow Pacified: " + localStorage.getItem("drowPacified"));
+    console.log("Door Unlocked: " + localStorage.getItem("doorUnlocked"));
+    console.log("==============================");
+}
+
+/* 
+Loads the saved game state from local storage, if it exists. See above notes on saveGame()
+for details about the functionality of saving.
+*/
+function loadGame() {
+    if (localStorage.getItem("playerLocX") != null)
+    {
+        initMap();
+        player.backpack = [];
+        player.locX = parseInt(localStorage.getItem("playerLocX"));
+        player.locY = parseInt(localStorage.getItem("playerLocY"));
+        goblinDefeated = localStorage.getItem("goblinDefeated");
+        usedSword();
+        drowPacified = localStorage.getItem("drowPacified");
+        usedMedallion();
+        doorUnlocked = localStorage.getItem("doorUnlocked");
+        usedKey();
+        
+        inputResponse = "Game loaded.";
+        updateText();
+    }
+    else
+    {
+        inputResponse = "No save game exists.";
+        updateText();
+    }
+}
+
+/*
+var gameStarted = false;
+var goblinDefeated = false;
+var drowPacified = false;
+var doorUnlocked = false;
+*/
+
 // Game state alteration functions
 function usedSword() {
-    
+    goblinDefeated = true;
+    gameMap[1][0].exits = ["north", "east", "west"];
+    gameMap[1][0].items.push("medallion");
+    gameMap[1][0].description = "The goblin lies face down against the Southern wall of the tunnel. With it out of the way, you can now pass to the North and East.";
+}
+
+function usedMedallion() {
+    drowPacified = true;
+    gameMap[2][0].items.push("key");
+    gameMap[2][0].description = "The drow in this chamber wave you towards their camp and offer you spider bread and fungus wine to join and rest with them. You feel vaguely menaced, but you can't tell why.";
+}
+
+function usedKey() {
+    doorUnlocked = true;
+    gameMap[0][1].name = "Unlocked Door";
+    gameMap[0][1].exits = ["north", "east"];
+    gameMap[0][1].description = "There is a sheer stone wall here, with a door hanging ajar at its center.";
 }
 
 // End Function Declarations
@@ -155,6 +249,8 @@ function updateGame() {
     
     // Log input for testing purposes.
     console.log("Input: " + playerInput);
+    console.log("Location: " + player.locX + ", " + player.locY);
+    
     
     // Variable definitions
     var itemLocation; // Used to store the index of items being manipulated by the player.
@@ -163,7 +259,7 @@ function updateGame() {
     switch (validateInput(playerInput)) {
     case 0:
         switch (playerInput[0]) {
-        case "get":
+       case "get":
         case "take":
             // Check if the player provided a target item.
             if (playerInput.length > 1) {
@@ -278,10 +374,7 @@ function updateGame() {
                         // If the item was found, check if the player is in the right room and the goblin is still alive.
                         if (player.locX === 1 && player.locY === 0 && goblinDefeated === false) {
                             // Set the goblin to defeated, add the extra exits to the room, add the medallion to the room, and change the room's description.
-                            goblinDefeated = true;
-                            gameMap[1][0].exits = ["north", "east", "west"];
-                            gameMap[1][0].items.push("medallion");
-                            gameMap[1][0].description = "The goblin lies face down against the Southern wall of the tunnel. With it out of the way, you can now pass to the North and East.";
+                            usedSword();
                             
                             // Report the successful use of the sword.
                             inputResponse = "Charging forward with a shout, you easily run the goblin through. It drops a medallion with a spider insignia carved into it.";
@@ -305,9 +398,7 @@ function updateGame() {
                         // If the item was found, check if the player is in the right room and the drow are not pacified.
                         if (player.locX === 2 && player.locY === 0 && drowPacified === false) {
                             // Set the drow to pacified, add the key to the room, and change the room's description.
-                            drowPacified = true;
-                            gameMap[2][0].items.push("key");
-                            gameMap[2][0].description = "The drow in this chamber wave you towards their camp and offer you spider bread and fungus wine to join and rest with them. You feel vaguely menaced, but you can't tell why.";
+                            usedMedallion();
                             
                             // Report the successful use of the medallion.
                             inputResponse = "As you display the spider medallion, the drow at the barricade visibly relax and usher you towards the camp. One of them offers you a key and points you Northwest.";
@@ -331,10 +422,7 @@ function updateGame() {
                         // If the item was found, check if the player is in the right room and the door is locked.
                         if (player.locX === 0 && player.locY === 1 && doorUnlocked === false) {
                             // Set the drow to pacified, add the key to the room, and change the room's description.
-                            doorUnlocked = true;
-                            gameMap[0][1].name = "Unlocked Door";
-                            gameMap[0][1].exits = ["north", "east"];
-                            gameMap[0][1].description = "There is a sheer stone wall here, with a door hanging ajar at its center.";
+                            usedKey();
                             
                             // Report the successful use of the medallion.
                             inputResponse = "You use your key to unlock the door.";
@@ -411,42 +499,6 @@ function updateGame() {
 /////////////////////////////////////////////////////////////////////
 // Event Handlers/Listeners
 /////////////////////////////////////////////////////////////////////
-// Toggle the help area when the button is pressed.
-function toggleHelp() {
-    // Check if the display property actually exists, or if it's "none"
-    if (!helpArea.style.display || helpArea.style.display === "none") {
-        helpArea.style.display = "inline-block"; // Make the help area visible
-    } else {
-        helpArea.style.display = "none"; // Otherwise, hide the help area
-    }
-}
-
-/*
-Saves the current game state to local storage. The following details are stored:
-The current location of the player (by room).
-The status of Progress Tracker variables, and the alterations they make to rooms.
-
-The following details are not stored (yet):
-The player's inventory.
-The locations of items in the game world.
-
-Known issue: If the game is saved after using the sword on the goblin, but before showing its
-medallion to the drow, loading the game will place it in an un-winnable state. This could be
-rectified by saving the status of items, but I'm keeping things simple and everything else
-works.
-*/
-function saveGame() {
-    
-}
-
-/* 
-Loads the saved game state from local storage, if it exists. See above notes on saveGame()
-for details about the functionality of saving.
-*/
-function loadGame() {
-    
-}
-
 // Detect keypresses, then check if they were "Enter"
 function keydownHandler() {
     if (event.keyCode === 13) {
@@ -461,4 +513,6 @@ function keydownHandler() {
 
 // Hook up event handlers to function as described
 showHelp.addEventListener("click", toggleHelp);
+saveButton.addEventListener("click", saveGame);
+loadButton.addEventListener("click", loadGame);
 window.addEventListener("keydown", keydownHandler, false);

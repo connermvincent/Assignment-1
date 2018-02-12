@@ -1,0 +1,36 @@
+Walkthrough:
+Start by picking up your sword. (get sword)
+
+Then head east from the starting room to the goblin tunnel. (east)
+
+Use your sword to defeat the goblin. (use sword)
+
+Pick up the spider medallion the goblin dropped. (get medallion)
+
+Go east from the goblin tunnel to the drow enclave. (east)
+
+Use the medallion, and the drow will give you a key. (use medallion)
+
+Pick up the key. (get key)
+
+Then go West once to the goblin tunnel, then North to the crossroads, and finally West again to the locked door. (west, north, west)
+
+Use the key to unlock the door. (use key)
+
+Drop the sword, medallion, and key that you're carrying- you'll need your inventory to be empty for the next step. (drop sword, drop medallion, drop key)
+
+Go east two times to the altar. (east, east)
+
+Pick up the idol- you can only pick it up if your inventory is empty. (get idol)
+
+Then go West twice, North once, then East once to get to the button room. (west, west, north, east)
+
+Drop the idol to trigger the button and open the door. (drop idol)
+
+You can now get to the exit, but you can't win unless you get your sword back. Go West once and South once to get to where you dropped it. (west, south)
+
+Pick up your sword. (get sword)
+
+Now you can head for the exit, going North once then East twice. (north, east, east)
+
+You win!
